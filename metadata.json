@@ -1,0 +1,6 @@
+{
+  "name": "XLaunch",
+  "description": "A modern deployment website with UI/UX similar to Vercel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
