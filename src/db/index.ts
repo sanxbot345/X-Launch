@@ -4,6 +4,15 @@ const { Pool } = pkg;
 import * as schema from './schema.ts';
 
 export const createPool = () => {
+  const connectionString = process.env.DATABASE_URL;
+  if (connectionString) {
+    return new Pool({
+      connectionString,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      connectionTimeoutMillis: 15000,
+    });
+  }
+
   return new Pool({
     host: process.env.SQL_HOST,
     user: process.env.SQL_USER,
