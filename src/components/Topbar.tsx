@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useStore } from "../store";
 import { Github, Loader2, Menu, X, LayoutGrid, PlusCircle } from "lucide-react";
-import { auth, githubAuthProvider } from "../lib/firebase";
-import { signInWithPopup, signOut, GithubAuthProvider } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth";
 
 export function Topbar() {
   const { user, authLoading, activeView, setUser, setActiveView } = useStore();
@@ -12,9 +12,8 @@ export function Topbar() {
   const handleLogin = async () => {
     try {
       setLoggingIn(true);
-      const result = await signInWithPopup(auth, githubAuthProvider);
-      const credential = GithubAuthProvider.credentialFromResult(result);
-      const githubToken = credential?.accessToken;
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
       
       const idToken = await firebaseUser.getIdToken();
@@ -26,7 +25,7 @@ export function Topbar() {
         },
         body: JSON.stringify({
            email: firebaseUser.email,
-           githubToken
+           githubToken: null // Google auth doesn't provide Github token
         })
       });
       
@@ -79,8 +78,7 @@ export function Topbar() {
             </div>
           ) : (
             <button onClick={handleLogin} className="flex items-center gap-2 bg-white text-black px-4 py-1.5 rounded-md text-xs font-bold hover:bg-white/90 transition-colors">
-              <Github className="w-4 h-4" />
-              Continue with GitHub
+              Continue with Google
             </button>
           )}
         </div>
